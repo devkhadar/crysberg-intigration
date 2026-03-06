@@ -2,8 +2,14 @@
   "name": "mk3",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "start": "node src/api/server.js",
+    "worker": "node src/index.js",
+    "api": "node src/api/server.js",
+    "dev:worker": "node --watch src/index.js",
+    "dev:api": "node --watch src/api/server.js",
+    "test:imports": "node test_imports.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,6 +20,7 @@
     "axios": "^1.13.6",
     "axios-cookiejar-support": "^6.0.5",
     "dotenv": "^17.3.1",
+    "express": "^5.2.1",
     "tough-cookie": "^6.0.0"
   }
 }

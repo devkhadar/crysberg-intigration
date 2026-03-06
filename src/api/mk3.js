@@ -1,5 +1,5 @@
 import axios from "axios";
-import auth from "./auth.js";
+import auth from "../auth.js";
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -65,9 +65,34 @@ async function getDecoders() {
     return result;
 }
 
+async function getLuDetails() {
+    const lous = await callProxy("/lu");
+    await sleep(75);
+
+    const details = [];
+    for (const decoder of (lous || [])) {
+        try {
+            const addr = decoder.addr;
+            // Fetching status for station 1 by default
+            const status = await callProxy(`/lu/${addr}/1/value`);
+            details.push({
+                addr: addr,
+                alias: decoder.alias,
+                state: decoder.state,
+                value: status
+            });
+            await sleep(50); // Be gentle on the interface
+        } catch (err) {
+            console.warn(`⚠ Could not fetch status for LU ${decoder.addr}: ${err.message}`);
+        }
+    }
+    return details;
+}
+
 export default {
     getTwState,
     getTwVoltage,
     getTwCurrent,
-    getDecoders
+    getDecoders,
+    getLuDetails
 };
