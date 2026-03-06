@@ -16,7 +16,6 @@ async function poll() {
         const payload = {
             ts: Date.now(),
             tw_state: twState,
-            temperature:twState,
             tw_voltage: voltage,
             tw_current: current,
             decoder_count: decoders.length
