@@ -14,6 +14,7 @@ import {
   XCircle,
   AlertCircle
 } from 'lucide-react';
+import { ConnectionError } from '@/components/ConnectionError';
 
 const getStatusProps = (state: number | null) => {
   switch (state) {
@@ -109,12 +110,15 @@ export default function Dashboard() {
           </button>
         </header>
 
+
         {error && (
-          <div className="bg-red-900/20 border border-red-500/30 text-red-400 p-4 rounded-2xl flex items-center gap-3 backdrop-blur-md">
-            <AlertCircle className="w-5 h-5" />
-            <p>{error}. Ensure the backend is running at http://localhost:3000</p>
-          </div>
+          <ConnectionError 
+            error={error} 
+            onRetry={fetchData} 
+            backendUrl="http://localhost:3000"
+          />
         )}
+
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
