@@ -115,7 +115,6 @@ export default function Dashboard() {
           <ConnectionError 
             error={error} 
             onRetry={fetchData} 
-            backendUrl="http://localhost:3000"
           />
         )}
 
