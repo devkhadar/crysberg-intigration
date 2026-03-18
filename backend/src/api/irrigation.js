@@ -10,16 +10,24 @@ async function getStatus(luId, stationId) {
             headers: { Authorization: `Bearer ${auth.token}` },
             timeout: 15000
         });
-        return res.data?.result;
+        const data = res.data;
+        if (data && data.error) {
+            throw new Error(`Crysberg Service Error: ${data.error.msg || 'service unavailable'}`);
+        }
+        return data && Object.prototype.hasOwnProperty.call(data, 'result') ? data.result : data;
     } catch (err) {
         if (err.response?.status === 401) {
             auth.token = null;
             await auth.ensureToken();
-            const retry = await axios.get(`${auth.proxyUrl}/lu/${luId}/${stationId}/value`, {
+            const retry = await axios.get(`${auth.proxyUrl}/${luId}/${stationId}/value`, {
                 headers: { Authorization: `Bearer ${auth.token}` },
                 timeout: 15000
             });
-            return retry.data?.result;
+            const data = retry.data;
+            if (data && data.error) {
+                throw new Error(`Crysberg Service Error: ${data.error.msg || 'service unavailable'}`);
+            }
+            return data && Object.prototype.hasOwnProperty.call(data, 'result') ? data.result : data;
         }
         throw err;
     }
@@ -34,8 +42,12 @@ async function sendCommand(luId, stationId, action) {
             headers: { Authorization: `Bearer ${auth.token}` },
             timeout: 15000
         });
+        const data = res.data;
+        if (data && data.error) {
+            throw new Error(`Crysberg Service Error: ${data.error.msg || 'service unavailable'}`);
+        }
         console.log(`✅ Command '${action}' sent for LU ${luId}, Station ${stationId}.`);
-        return res.data;
+        return data && Object.prototype.hasOwnProperty.call(data, 'result') ? data.result : data;
     } catch (err) {
         if (err.response?.status === 401) {
             auth.token = null;
@@ -44,7 +56,11 @@ async function sendCommand(luId, stationId, action) {
                 headers: { Authorization: `Bearer ${auth.token}` },
                 timeout: 15000
             });
-            return retry.data;
+            const data = retry.data;
+            if (data && data.error) {
+                throw new Error(`Crysberg Service Error: ${data.error.msg || 'service unavailable'}`);
+            }
+            return data && Object.prototype.hasOwnProperty.call(data, 'result') ? data.result : data;
         }
         throw err;
     }
