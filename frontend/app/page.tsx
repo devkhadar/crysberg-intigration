@@ -15,6 +15,25 @@ import {
   AlertCircle
 } from 'lucide-react';
 
+const getStatusProps = (state: number | null) => {
+  switch (state) {
+    case 0:
+      return { label: "OFF", color: "slate", icon: "⛔" };
+    case 1:
+      return { label: "CHARGING", color: "amber", icon: "⚡" };
+    case 2:
+      return { label: "OPERATIONAL", color: "emerald", icon: "✅" };
+    case 3:
+      return { label: "SHORT FINDING", color: "orange", icon: "🔍" };
+    case 10:
+      return { label: "LEAK FINDING", color: "red", icon: "💧" };
+    case 99:
+      return { label: "UNKNOWN", color: "slate", icon: "❓" };
+    default:
+      return { label: "---", color: "slate", icon: null };
+  }
+};
+
 export default function Dashboard() {
   const [mk3State, setMk3State] = useState<any>(null);
   const [mk3Voltage, setMk3Voltage] = useState<any>(null);
@@ -99,12 +118,17 @@ export default function Dashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard 
-            title="System State" 
-            value={mk3State != null ? (mk3State === 1 ? 'ACTIVE' : 'IDLE') : '---'} 
-            icon={<Activity className="w-6 h-6 text-blue-400" />}
-            color={mk3State === 1 ? 'emerald' : 'slate'}
-          />
+          {(() => {
+            const props = getStatusProps(mk3State);
+            return (
+              <StatCard 
+                title="System State" 
+                value={props.label} 
+                icon={props.icon ? <span className="text-xl">{props.icon}</span> : <Activity className="w-6 h-6 text-blue-400" />}
+                color={props.color}
+              />
+            );
+          })()}
           <StatCard 
             title="Line Voltage" 
             value={mk3Voltage != null ? `${mk3Voltage}V` : '---'} 
@@ -158,6 +182,8 @@ function StatCard({ title, value, icon, color }: { title: string, value: string,
     emerald: 'from-emerald-950/20 to-emerald-900/10 border-emerald-500/20',
     blue: 'from-blue-950/20 to-blue-900/10 border-blue-500/20',
     amber: 'from-amber-950/20 to-amber-900/10 border-amber-500/20',
+    orange: 'from-orange-950/20 to-orange-900/10 border-orange-500/20',
+    red: 'from-red-950/20 to-red-900/10 border-red-500/20',
     slate: 'from-slate-800/20 to-slate-700/10 border-slate-600/20',
   };
 
