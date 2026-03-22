@@ -134,7 +134,7 @@ export default function Dashboard() {
           })()}
           <StatCard 
             title="Line Voltage" 
-            value={mk3Voltage != null ? `${mk3Voltage}V` : '---'} 
+            value={mk3Voltage != null ? `${(mk3Voltage / 1000).toFixed(1)}V` : '---'} 
             icon={<Zap className="w-6 h-6 text-amber-400" />}
             color="amber"
           />
